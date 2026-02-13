@@ -118,8 +118,8 @@ export default function CreateTemplatePage() {
           return posA - posB;
         });
 
-        const importedQuestions = sortedQuestions.map((q: any) => ({
-          id: Date.now().toString() + Math.random().toString(36).substring(2, 9),
+        const importedQuestions = sortedQuestions.map((q: any, idx: number) => ({
+          id: `${Date.now()}-${idx}-${Math.random().toString(36).substring(2, 9)}`,
           text: q.text || "",
           type: q.type || "text",
           options: q.options || [],
