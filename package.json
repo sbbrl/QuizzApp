@@ -1,7 +1,7 @@
 {
   "name": "quizzapp",
   "version": "1.0.0",
-  "description": "QuizzApp that I definately didn't vibe code.",
+  "description": "Valentines Compatibility Quiz App for Valentine's Day events.",
   "main": "index.js",
   "scripts": {
     "dev": "next dev",

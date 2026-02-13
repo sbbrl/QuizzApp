@@ -59,9 +59,50 @@ export default function QuizPage() {
       }, 1000);
       return () => clearInterval(timer);
     } else if (timeRemaining === 0) {
-      handleSubmit(new Event("submit") as any);
+      autoSubmit();
     }
   }, [timeRemaining]);
+
+  const autoSubmit = async () => {
+    // Check required questions
+    const unanswered = quizData?.template.questions.filter(
+      (q) => q.required && !answers[q.id]
+    );
+
+    if (unanswered && unanswered.length > 0) {
+      alert(`Time's up! Please answer all required questions (${unanswered.length} remaining)`);
+      return;
+    }
+
+    setSubmitting(true);
+    const timeSpent = Math.floor((Date.now() - startTime) / 1000);
+
+    try {
+      const response = await fetch("/api/quiz/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sessionId: quizData?.id,
+          participantName,
+          participantEmail: participantEmail || null,
+          answers,
+          timeSpent,
+        }),
+      });
+
+      if (response.ok) {
+        setSubmitted(true);
+      } else {
+        const error = await response.json();
+        alert(error.error || "Failed to submit quiz");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("An error occurred");
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   const fetchQuiz = async () => {
     try {
