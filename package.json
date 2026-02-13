@@ -21,6 +21,9 @@
     "url": "https://github.com/sbbrl/QuizzApp/issues"
   },
   "homepage": "https://github.com/sbbrl/QuizzApp#readme",
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
   "dependencies": {
     "@prisma/client": "^5.22.0",
     "@types/bcryptjs": "^2.4.6",
