@@ -87,9 +87,7 @@ export default function LoginPage() {
         </form>
 
         <div className="mt-6 text-center text-sm text-gray-600">
-          <p>Default credentials:</p>
-          <p className="font-mono">username: admin</p>
-          <p className="font-mono">password: leoadmin</p>
+          <p>Default credentials: Provided By Host</p>
         </div>
       </div>
     </div>
