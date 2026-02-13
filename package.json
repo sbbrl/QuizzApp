@@ -1,0 +1,43 @@
+{
+  "name": "quizzapp",
+  "version": "1.0.0",
+  "description": "Valentines Compatibility Quiz App for Valentine's Day events.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sbbrl/QuizzApp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/sbbrl/QuizzApp/issues"
+  },
+  "homepage": "https://github.com/sbbrl/QuizzApp#readme",
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^25.2.3",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vercel/postgres": "^0.10.0",
+    "autoprefixer": "^10.4.24",
+    "bcryptjs": "^3.0.3",
+    "next": "^15.0.8",
+    "next-auth": "^4.24.13",
+    "postcss": "^8.5.6",
+    "prisma": "^5.22.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "tailwindcss": "^3.4.19",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}
