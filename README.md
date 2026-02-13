@@ -30,7 +30,7 @@ A comprehensive web application for hosting Valentine's Day compatibility quiz e
 
 ```
 Username: admin
-Password: admin123
+Password: leoadmin
 ```
 
 **⚠️ Important:** Change these credentials in production!
