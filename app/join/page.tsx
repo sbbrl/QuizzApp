@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
-export default function JoinPage() {
+function JoinForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [code, setCode] = useState(searchParams.get("code") || "");
@@ -68,5 +68,17 @@ export default function JoinPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function JoinPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-pink-100 to-red-100 flex items-center justify-center">
+        <div className="text-xl text-gray-800">Loading...</div>
+      </div>
+    }>
+      <JoinForm />
+    </Suspense>
   );
 }
