@@ -62,6 +62,82 @@ export default function CreateTemplatePage() {
     setQuestions(questions.filter((q) => q.id !== id));
   };
 
+  const exportTemplate = () => {
+    const templateData = {
+      name,
+      description,
+      questions: questions.map((q, index) => ({
+        text: q.text,
+        type: q.type,
+        options: q.options || [],
+        required: q.required,
+        position: index + 1,
+      })),
+      _format: {
+        version: "1.0",
+        description: "QuizzApp Template Format",
+        questionTypes: ["text", "dropdown", "radio"],
+        notes: "Position field indicates the order of questions in the quiz (starting from 1)"
+      }
+    };
+
+    const jsonString = JSON.stringify(templateData, null, 2);
+    const blob = new Blob([jsonString], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${name || "template"}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  const importTemplate = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const content = e.target?.result as string;
+        const templateData = JSON.parse(content);
+
+        if (!templateData.questions || !Array.isArray(templateData.questions)) {
+          alert("Invalid template format: missing questions array");
+          return;
+        }
+
+        setName(templateData.name || "");
+        setDescription(templateData.description || "");
+        
+        // Sort by position if available, otherwise use array order
+        const sortedQuestions = [...templateData.questions].sort((a, b) => {
+          const posA = a.position || 0;
+          const posB = b.position || 0;
+          return posA - posB;
+        });
+
+        const importedQuestions = sortedQuestions.map((q: any) => ({
+          id: Date.now().toString() + Math.random().toString(36).substring(2, 9),
+          text: q.text || "",
+          type: q.type || "text",
+          options: q.options || [],
+          required: q.required || false,
+        }));
+
+        setQuestions(importedQuestions);
+        alert("Template imported successfully!");
+      } catch (error) {
+        console.error("Import error:", error);
+        alert("Failed to import template. Please check the JSON format.");
+      }
+    };
+    reader.readAsText(file);
+    // Reset the input so the same file can be imported again if needed
+    event.target.value = "";
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (questions.length === 0) {
@@ -161,13 +237,33 @@ export default function CreateTemplatePage() {
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-bold text-gray-800">Questions</h2>
-              <button
-                type="button"
-                onClick={addQuestion}
-                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition-colors"
-              >
-                + Add Question
-              </button>
+              <div className="flex gap-2">
+                <label className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded transition-colors cursor-pointer">
+                  📥 Import JSON
+                  <input
+                    type="file"
+                    accept=".json"
+                    onChange={importTemplate}
+                    className="hidden"
+                  />
+                </label>
+                <button
+                  type="button"
+                  onClick={exportTemplate}
+                  disabled={questions.length === 0 && !name}
+                  className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  title={questions.length === 0 && !name ? "Add questions or template name to export" : "Export template as JSON"}
+                >
+                  📤 Export JSON
+                </button>
+                <button
+                  type="button"
+                  onClick={addQuestion}
+                  className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition-colors"
+                >
+                  + Add Question
+                </button>
+              </div>
             </div>
 
             {questions.length === 0 ? (
@@ -244,6 +340,9 @@ export default function CreateTemplatePage() {
                         }
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
                       >
+                        <option value="" disabled className="text-gray-500">
+                          Format: type: "text" | "radio" | "dropdown"
+                        </option>
                         <option value="text">Text Answer</option>
                         <option value="radio">Multiple Choice (Radio)</option>
                         <option value="dropdown">Dropdown</option>
